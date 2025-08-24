@@ -18,7 +18,7 @@ HW_FOLDER="homeworks/hw${HW_NUM}"
 TEST_FILE="tests/test_hw${HW_NUM}.py"
 TARGETS=""
 
-# Collect targets
+# Collect targets (homework folder + its subfolders)
 if [ -d "$HW_FOLDER" ]; then
   for d in "$HW_FOLDER"/*; do
     [ -d "$d" ] && TARGETS="$TARGETS $d"
@@ -26,6 +26,7 @@ if [ -d "$HW_FOLDER" ]; then
   TARGETS="$TARGETS $HW_FOLDER"
 fi
 
+# Add corresponding test file
 if [ -f "$TEST_FILE" ]; then
   TARGETS="$TARGETS $TEST_FILE"
 else
@@ -41,16 +42,16 @@ echo "$TARGETS"
 echo -e "\nRunning linters..."
 
 echo -e "\n- flake8"
-flake8 .
+flake8 $TARGETS
 
 echo -e "\n- mypy"
-mypy .
+mypy $TARGETS
 
 echo -e "\n- pylint"
-pylint . || true
+pylint $TARGETS || true
 
 echo -e "\n- ruff"
-ruff check .
+ruff check $TARGETS
 
 # Tests
 echo -e "\n- Running pytest..."
